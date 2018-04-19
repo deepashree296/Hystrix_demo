@@ -1,0 +1,4 @@
+org/example/service/ReadingServiceImpl.class
+org/example/webclient/api/ReadingController.class
+org/example/ReadingApplication.class
+org/example/service/ReadingService.class
