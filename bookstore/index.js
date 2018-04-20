@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 
 // recommendations for the books
 endPoint = '/recommended';
-app.post(endPoint, (req, res) => {
+app.get(endPoint, (req, res) => {
   log.info(`POST ${endPoint} - Data - ${JSON.stringify(req.body)}`);
   res.json([
     {
@@ -39,7 +39,7 @@ app.post(endPoint, (req, res) => {
 // recommendations for the books with some delay
 const delay = 5000; // 5000 miliseconds
 endPoint = '/recommended-withdelay';
-app.post(endPoint, (req, res) => {
+app.get(endPoint, (req, res) => {
   log.info(`POST ${endPoint} - Data - ${JSON.stringify(req.body)}`);
   setTimeout(() => {
     res.json([
@@ -61,7 +61,7 @@ app.post(endPoint, (req, res) => {
 
 // recommendations for the books with no response
 endPoint = '/recommended-withnoresponse';
-app.post(endPoint, (req) => {
+app.get(endPoint, (req) => {
   log.info(`POST ${endPoint} - Data - ${JSON.stringify(req.body)}`);
 });
 
