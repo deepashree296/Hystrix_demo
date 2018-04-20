@@ -49,6 +49,14 @@ public  String readingList_threadrejection() {
       return restTemplate.getForObject(uri, String.class);
 }
 
+
+@Override
+@HystrixCommand()
+public  String readingList_witherror() {
+    URI uri = URI.create("http://localhost:3030/recommended-withservererror");
+    return restTemplate.getForObject(uri, String.class);
+}
+
 public String reliable() {
   return "fallback";
  }

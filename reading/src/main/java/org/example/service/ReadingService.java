@@ -7,5 +7,6 @@ public interface ReadingService {
   String readingList_withdelay();
   String readingList_withtimeout();
   String readingList_threadrejection();
+  String readingList_witherror();
 
 }

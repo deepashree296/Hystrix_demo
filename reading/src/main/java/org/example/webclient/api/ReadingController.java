@@ -1,19 +1,16 @@
 package org.example.webclient.api;
-
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
-import java.net.URI;
-import org.springframework.web.client.RestTemplate;
 import org.example.service.ReadingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
-import org.json.simple.JSONObject;
+
 
 @RestController
+
 public class ReadingController {
 
 @Autowired
@@ -59,5 +56,15 @@ public ResponseEntity<String> getreadingList_timeout() {
 }
 
 
+@RequestMapping(
+        value="/to-read-servererror",
+        method=RequestMethod.GET
+       )
+public ResponseEntity<String> getreadingList_servererror() {
+
+       String readingList = readingService.readingList_witherror();
+       return new ResponseEntity<String>(
+                     readingList, HttpStatus.OK);
+       }
 
 }

@@ -67,7 +67,7 @@ app.get(endPoint, (req) => {
 
 // recommendations for the books with 5XX error
 endPoint = '/recommended-withservererror';
-app.post(endPoint, (req, res) => {
+app.get(endPoint, (req, res) => {
   log.info(`POST ${endPoint} - Data - ${JSON.stringify(req.body)}`);
   res.status(500).json({
     data: 'How did you like my server error!',
