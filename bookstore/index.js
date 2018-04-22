@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 
 // recommendations for the books
 endPoint = '/recommended';
-app.post(endPoint, (req, res) => {
+app.get(endPoint, (req, res) => {
   log.info(`POST ${endPoint} - Data - ${JSON.stringify(req.body)}`);
   res.json({
     data: bookDetails,
