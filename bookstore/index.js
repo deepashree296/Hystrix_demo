@@ -1,3 +1,4 @@
+const { getBookById, bookDetails } = require('./books');
 const Log = require('log');
 const express = require('express');
 const fs = require('fs');
@@ -8,35 +9,6 @@ const port = 3030;
 const log = new Log('DEBUG', fs.createWriteStream('app.log', { flags: 'a' }));
 
 let endPoint;
-const userData = [
-  {
-    userId: 1,
-    bookId: [3, 4, 5],
-  },
-  {
-    userId: 2,
-    bookId: [6, 7, 8],
-  },
-];
-
-const getDataForUserId = (userId) => {
-  let userDataObject = null;
-  userData.some((element) => {
-    if (element.userId === userId) {
-      userDataObject = element;
-      return true;
-    }
-    return false;
-  });
-  return userDataObject;
-};
-
-const isBookInUserObject = (userDataObject, bookId) => userDataObject.bookId.some((element) => {
-  if (element === bookId) {
-    return true;
-  }
-  return false;
-});
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -48,55 +20,34 @@ app.use(bodyParser.json());
 endPoint = '/recommended';
 app.get(endPoint, (req, res) => {
   log.info(`POST ${endPoint} - Data - ${JSON.stringify(req.body)}`);
-  res.json([
-    {
-      title: 'Godel, Escher, Bach: an Eternal Golden Braid',
-      author: 'Douglas Hofstadter',
-    },
-    {
-      title: 'Sapiens: A Brief History of Humankind',
-      author: 'Yuval Noah Harari',
-    },
-    {
-      title: 'A Brief History of Time',
-      author: 'Stephen Hawking',
-    },
-  ]);
+  res.json({
+    data: bookDetails,
+  });
 });
 
 
 // recommendations for the books with some delay
 const delay = 5000; // 5000 miliseconds
-endPoint = '/recommended-withdelay';
-app.get(endPoint, (req, res) => {
+endPoint = '/bookid-withdelay';
+app.post(endPoint, (req, res) => {
   log.info(`POST ${endPoint} - Data - ${JSON.stringify(req.body)}`);
+  const bookObject = getBookById(req.body.bookId); // Will be null if not a valid book ID
   setTimeout(() => {
-    res.json([
-      {
-        title: 'Godel, Escher, Bach: an Eternal Golden Braid',
-        author: 'Douglas Hofstadter',
-      },
-      {
-        title: 'Sapiens: A Brief History of Humankind',
-        author: 'Yuval Noah Harari',
-      },
-      {
-        title: 'A Brief History of Time',
-        author: 'Stephen Hawking',
-      },
-    ]);
+    res.json({
+      data: bookObject,
+    });
   }, delay);
 });
 
 // recommendations for the books with no response
-endPoint = '/recommended-withnoresponse';
-app.get(endPoint, (req) => {
+endPoint = '/bookid-withnoresponse';
+app.post(endPoint, (req) => {
   log.info(`POST ${endPoint} - Data - ${JSON.stringify(req.body)}`);
 });
 
 // recommendations for the books with 5XX error
-endPoint = '/recommended-withservererror';
-app.get(endPoint, (req, res) => {
+endPoint = '/bookid-withservererror';
+app.post(endPoint, (req, res) => {
   log.info(`POST ${endPoint} - Data - ${JSON.stringify(req.body)}`);
   res.status(500).json({
     data: 'How did you like my server error!',
@@ -104,22 +55,19 @@ app.get(endPoint, (req, res) => {
 });
 
 // endpoint with data validation
-endPoint = '/recommended-withvalidation';
+endPoint = '/bookid-withvalidation';
 app.post(endPoint, (req, res) => {
   log.info(`POST ${endPoint} - Data - ${JSON.stringify(req.body)}`);
-  if (!req.body.bookId || !req.body.userId) {
+  if (!req.body.bookId) {
     res.status(400).json({
-      data: 'Please provide valid book id and user id',
+      data: 'Please provide valid book id',
     });
     return;
   }
-  const userId = parseInt(req.body.userId, 10);
-  const bookId = parseInt(req.body.bookId, 10);
-  const userDataObject = getDataForUserId(userId);
-  const foundBookId = isBookInUserObject(userDataObject, bookId);
-  if (foundBookId) {
+  const bookObject = getBookById(req.body.bookId); // Will be null if not a valid book ID
+  if (bookObject) {
     res.status(200).json({
-      data: `You asked for details of bookId: ${req.body.bookId}, which we found`,
+      data: bookObject,
     });
   } else {
     res.status(400).json({
