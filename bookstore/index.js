@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 
 // recommendations for the books
 endPoint = '/recommended';
-app.get(endPoint, (req, res) => {
+app.post(endPoint, (req, res) => {
   log.info(`POST ${endPoint} - Data - ${JSON.stringify(req.body)}`);
   res.json({
     data: bookDetails,
@@ -28,6 +28,25 @@ app.get(endPoint, (req, res) => {
 
 // recommendations for the books with some delay
 const delay = 5000; // 5000 miliseconds
+endPoint = '/recommended-withdelay';
+app.post(endPoint, (req, res) => {
+  log.info(`POST ${endPoint} - Data - ${JSON.stringify(req.body)}`);
+  const bookObject = getBookById(req.body.bookId); // Will be null if not a valid book ID
+  setTimeout(() => {
+    res.json({
+      data: bookObject,
+    });
+  }, delay);
+});
+
+endPoint = '/recommended_withnoresponse';
+app.post(endPoint, (req) => {
+  log.info(`POST ${endPoint} - Data - ${JSON.stringify(req.body)}`);
+});
+
+
+// recommendations for the books with some delay
+//const delay = 5000; // 5000 miliseconds
 endPoint = '/bookid-withdelay';
 app.post(endPoint, (req, res) => {
   log.info(`POST ${endPoint} - Data - ${JSON.stringify(req.body)}`);
@@ -60,11 +79,13 @@ app.post(endPoint, (req, res) => {
   log.info(`POST ${endPoint} - Data - ${JSON.stringify(req.body)}`);
   if (!req.body.bookId) {
     res.status(400).json({
-      data: 'Please provide valid book id',
+      data: 'Please provide a valid book id',
+      error_code: 701
     });
     return;
   }
   const bookObject = getBookById(req.body.bookId); // Will be null if not a valid book ID
+  console.log("bookId, ", req.body.bookId, bookObject);
   if (bookObject) {
     res.status(200).json({
       data: bookObject,
@@ -72,6 +93,7 @@ app.post(endPoint, (req, res) => {
   } else {
     res.status(400).json({
       data: `You asked for details of bookId: ${req.body.bookId}, which we could not find`,
+      error_code: 702
     });
   }
 });

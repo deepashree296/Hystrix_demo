@@ -1,12 +1,12 @@
 package org.example.service;
-import org.json.simple.JSONObject;
+
+import org.example.exception.TestException;
 
 public interface ReadingService {
 
   String readingList();
   String readingList_withdelay();
-  String readingList_withtimeout();
-  String readingList_threadrejection();
-  String readingList_witherror();
+  String readingList_withnoresponse();
+  String getBookDetailsBasedOnId(String id) throws Exception;
 
 }

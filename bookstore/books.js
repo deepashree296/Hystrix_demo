@@ -26,7 +26,7 @@ const bookDetails = [
   {
     bookId: 'B4',
     bookName: 'Into The Wild',
-    bookAuthor: '',
+    bookAuthor: 'Jon Krakauer',
     bookCategory: 'Travel',
     bookPrice: '250',
     yearOfRelease: '2010',
